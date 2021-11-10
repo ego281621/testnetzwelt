@@ -1,0 +1,126 @@
+﻿@using System.Text.Json;
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        ul, #myUL {
+            list-style-type: none;
+        }
+
+        #myUL {
+            margin: 0;
+            padding: 0;
+        }
+
+        .caret {
+            cursor: pointer;
+            -webkit-user-select: none; /* Safari 3.1+ */
+            -moz-user-select: none; /* Firefox 2+ */
+            -ms-user-select: none; /* IE 10+ */
+            user-select: none;
+        }
+
+            .caret::before {
+                content: "\25B6";
+                color: black;
+                display: inline-block;
+                margin-right: 6px;
+            }
+
+        .caret-down::before {
+            -ms-transform: rotate(90deg); /* IE 9 */
+            -webkit-transform: rotate(90deg); /* Safari */
+            ' transform: rotate(90deg);
+        }
+
+        .nested {
+            display: none;
+        }
+
+        .active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <h2>Territories</h2>
+    <p>Here are the list of territories</p>
+    <ul id="myUL">
+     
+    </ul>
+
+    <script>
+
+        var jsonData = @Html.Raw(ViewData["Territories"]);
+
+        $(document).ready(function () {
+
+            var clsParentUL = $("#myUL");
+
+            if (jsonData != null) {
+                $.each(jsonData.Result, function (index, reg) {
+                    //clsParentUL.append('<span class="caret">' + value.Name + '</span>');
+                    var region = '<span class="caret">' + reg.Name + '</span>';
+                    var province = '';
+                    var appendFinal = '';
+                    
+
+                    if (reg.Provinces.length > 0)
+                    {
+                        $.each(reg.Provinces, function (index, prov) {
+
+                            if (prov.Municipalities.length > 0)
+                            {
+                                var municipality = '';
+
+                                $.each(prov.Municipalities, function (index, mul) {
+                                    municipality += '<li>' + mul.Name + '</li>';
+                                });
+
+                                province += '<li><span class="caret">'
+                                    + prov.Name
+                                    + '<ul class="nested">'
+                                    + municipality
+                                    + '</ul>'
+                                    + '</span></li>';
+                            }
+                            else
+                            {
+                                province += '<li>' + prov.Name + '</li>';
+                            }
+
+                        });
+                    }
+
+                    appendFinal += region;
+                    if (province != '')
+                    {
+                        appendFinal += '<ul class="nested">' + province + '</ul>';
+                    }
+
+                    clsParentUL.append('<li>' + appendFinal + '</li>')
+
+
+                });
+            }
+
+            var toggler = document.getElementsByClassName("caret");
+            var i;
+            for (i = 0; i < toggler.length; i++) {
+                toggler[i].addEventListener("click", function () {
+                    this.parentElement.querySelector(".nested").classList.toggle("active");
+                    this.classList.toggle("caret-down");
+                });
+            }
+
+        });
+
+
+    </script>
+</body>
+</html>

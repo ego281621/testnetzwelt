@@ -1,0 +1,27 @@
+﻿@{
+    ViewData["Title"] = "Account Page";
+}
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Account Login</title>
+</head>
+<body>
+
+    <h3>Login Page</h3>
+    <form method="post" asp-controller="Account" asp-action="Login">
+        <div class="form-group">
+            <label for="username">UserName</label>
+            <input type="text" class="form-control" id="username" name="username" placeholder="User Name">
+        </div>
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" class="form-control" name="password" id="password" placeholder="Password">
+        </div>
+        <button type="submit" class="btn btn-primary">Login</button>
+    </form>
+    <br/>
+     @ViewBag.error
+</body>
+</html>
